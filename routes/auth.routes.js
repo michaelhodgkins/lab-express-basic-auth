@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const router = new Router();
 const User = require('../models/User.model');
+const { isLoggedIn, isLoggedOut } = require('../middleware/route-guard.js');
 
 const bcryptjs = require('bcryptjs');
 const saltRounds = 10;
@@ -55,6 +56,11 @@ router.post('/login', (req, res, next) => {
         })
         .catch(error => next(error));
     });
+
+    router.get('/main', isLoggedIn, (req, res) => res.render('auth/main'));
+
+    router.get('/private', isLoggedIn, (req, res) => res.render('auth/private'));
+
 
 
     router.post('/logout', (req, res, next) => {
